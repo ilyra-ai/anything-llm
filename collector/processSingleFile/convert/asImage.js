@@ -7,6 +7,8 @@ const {
 } = require("../../utils/files");
 const OCRLoader = require("../../utils/OCRLoader");
 const { default: slugify } = require("slugify");
+const sharp = require("sharp");
+const exifReader = require("exif-reader");
 
 async function asImage({ fullFilePath = "", filename = "", options = {} }) {
   let content = await new OCRLoader({
@@ -23,13 +25,26 @@ async function asImage({ fullFilePath = "", filename = "", options = {} }) {
     };
   }
 
+  let meta = {};
+  try {
+    const info = await sharp(fullFilePath).metadata();
+    if (info.exif) {
+      meta = exifReader(info.exif);
+    }
+  } catch (e) {
+    console.warn("Failed to read image metadata", e.message);
+  }
+
+  const docAuthor = meta?.image?.Artist || "Unknown";
+  const description = meta?.image?.ImageDescription || "Unknown";
+
   console.log(`-- Working ${filename} --`);
   const data = {
     id: v4(),
     url: "file://" + fullFilePath,
     title: filename,
-    docAuthor: "Unknown", // TODO: Find a better author
-    description: "Unknown", // TODO: Find a better description
+    docAuthor,
+    description,
     docSource: "a text file uploaded by the user.",
     chunkSource: "",
     published: createdDate(fullFilePath),
