@@ -45,7 +45,7 @@ async function asImage({ fullFilePath = "", filename = "", options = {} }) {
     title: filename,
     docAuthor,
     description,
-    docSource: "a text file uploaded by the user.",
+    docSource: "image file uploaded by the user.",
     chunkSource: "",
     published: createdDate(fullFilePath),
     wordCount: content.split(" ").length,

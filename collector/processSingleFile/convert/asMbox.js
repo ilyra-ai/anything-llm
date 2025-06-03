@@ -46,8 +46,8 @@ async function asMbox({ fullFilePath = "", filename = "" }) {
       title: mail?.subject
         ? slugify(mail?.subject?.replace(".", "")) + ".mbox"
         : `msg_${item}-${filename}`,
-      docAuthor: mail?.from?.text,
-      description: "No description found.",
+      docAuthor: mail?.from?.text || "Unknown",
+      description: mail?.subject || "Unknown",
       docSource: "Mbox message file uploaded by the user.",
       chunkSource: "",
       published: createdDate(fullFilePath),
