@@ -364,3 +364,24 @@ model User {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+model plans {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  price       Int?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user_plans  user_plans[]
+}
+
+model user_plans {
+  id        Int    @id @default(autoincrement())
+  userId    Int    @unique
+  planId    Int
+  assignedAt DateTime @default(now())
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan      plans  @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+}

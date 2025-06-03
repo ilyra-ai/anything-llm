@@ -1,6 +1,8 @@
 const prisma = require("../utils/prisma");
 const bcrypt = require("bcrypt");
 const { makeJWT } = require("../utils/http");
+const { Plan } = require("./plan");
+const { UserPlan } = require("./userPlan");
 
 const AuthUser = {
   async register({ email, password, role = "user" }) {
@@ -9,6 +11,11 @@ const AuthUser = {
       const user = await prisma.user.create({
         data: { email, hashed_password: hashed, role },
       });
+      let plan = await Plan.get({ name: "Free" });
+      if (!plan) {
+        ({ plan } = await Plan.create({ name: "Free" }));
+      }
+      if (plan) await UserPlan.assign(user.id, plan.id);
       return { user, error: null };
     } catch (error) {
       console.error(error.message);
