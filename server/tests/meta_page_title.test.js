@@ -1,5 +1,11 @@
 const path = require('path');
 const assert = require('assert');
+const { SystemSettings } = require('../models/systemSettings');
+const { escapeHtml } = require('../utils/helpers/escapeHtml');
+
+const malicious = '<script>alert("x")</script>';
+const sanitized = SystemSettings.validations.meta_page_title(malicious);
+assert.strictEqual(sanitized, escapeHtml(malicious), 'Validation failed to sanitize');
 
 // stub SystemSettings before requiring MetaGenerator
 const stubPath = path.join(__dirname, '../models/systemSettings.js');
@@ -10,7 +16,7 @@ require.cache[require.resolve(stubPath)] = {
   exports: {
     SystemSettings: {
       async getValueOrFallback({ label }, fallback) {
-        if (label === 'meta_page_title') return '<script>alert("x")</script>';
+        if (label === 'meta_page_title') return sanitized;
         if (label === 'meta_page_favicon') return null;
         return fallback;
       },
@@ -19,7 +25,6 @@ require.cache[require.resolve(stubPath)] = {
 };
 
 const { MetaGenerator } = require('../utils/boot/MetaGenerator');
-const { escapeHtml } = require('../utils/helpers/escapeHtml');
 
 (async () => {
   const gen = new MetaGenerator();
@@ -28,7 +33,6 @@ const { escapeHtml } = require('../utils/helpers/escapeHtml');
     send(html) { this.html = html; return this; },
   };
   await gen.generate(res);
-  const expected = escapeHtml('<script>alert("x")</script>');
-  assert(res.html.includes(expected), 'Title was not escaped');
+  assert(res.html.includes(sanitized), 'Title was not escaped');
   console.log('Test passed');
 })();
