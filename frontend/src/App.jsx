@@ -10,6 +10,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "@/pages/Login";
 import SimpleSSOPassthrough from "@/pages/Login/SSO/simple";
+const AuthLogin = lazy(() => import("@/pages/auth/login"));
+const AuthRegister = lazy(() => import("@/pages/auth/register"));
 import OnboardingFlow from "@/pages/OnboardingFlow";
 import i18n from "./i18n";
 
@@ -101,6 +103,8 @@ export default function App() {
                 <Routes>
                   <Route path="/" element={<PrivateRoute Component={Main} />} />
                   <Route path="/login" element={<Login />} />
+                  <Route path="/auth/login" element={<AuthLogin />} />
+                  <Route path="/auth/register" element={<AuthRegister />} />
                   <Route
                     path="/sso/simple"
                     element={<SimpleSSOPassthrough />}
