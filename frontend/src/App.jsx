@@ -69,6 +69,7 @@ const EmbedConfigSetup = lazy(
   () => import("@/pages/GeneralSettings/EmbedConfigs")
 );
 const EmbedChats = lazy(() => import("@/pages/GeneralSettings/EmbedChats"));
+const Plans = lazy(() => import("@/pages/GeneralSettings/Plans"));
 const PrivacyAndData = lazy(
   () => import("@/pages/GeneralSettings/PrivacyAndData")
 );
@@ -227,6 +228,10 @@ export default function App() {
                     element={
                       <ManagerRoute Component={GeneralBrowserExtension} />
                     }
+                  />
+                  <Route
+                    path="/settings/plans"
+                    element={<PrivateRoute Component={Plans} />}
                   />
                   <Route
                     path="/settings/workspace-chats"
