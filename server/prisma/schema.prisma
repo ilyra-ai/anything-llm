@@ -355,3 +355,12 @@ model prompt_history {
 
   @@index([workspaceId])
 }
+
+model User {
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  hashed_password String
+  role           String   @default("user")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
