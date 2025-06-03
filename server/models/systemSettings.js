@@ -8,6 +8,7 @@ const prisma = require("../utils/prisma");
 const { v4 } = require("uuid");
 const { MetaGenerator } = require("../utils/boot/MetaGenerator");
 const { PGVector } = require("../utils/vectorDbProviders/pgvector");
+const { escapeHtml } = require("../utils/helpers/escapeHtml");
 
 function isNullOrNaN(value) {
   if (value === null) return true;
@@ -162,7 +163,7 @@ const SystemSettings = {
     meta_page_title: (newTitle) => {
       try {
         if (typeof newTitle !== "string" || !newTitle) return null;
-        return String(newTitle);
+        return escapeHtml(String(newTitle));
       } catch {
         return null;
       } finally {
