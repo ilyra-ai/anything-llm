@@ -5,6 +5,8 @@
  * @property {string|null} content - Text content to be injected between tags. If null self-closing.
  */
 
+const { escapeHtml } = require("../helpers/escapeHtml");
+
 /**
  * This class serves the default index.html page that is not present when built in production.
  * and therefore this class should not be called when in development mode since it is unused.
@@ -189,9 +191,10 @@ class MetaGenerator {
         {
           tag: "title",
           props: null,
-          content:
+          content: escapeHtml(
             customTitle ??
-            "AnythingLLM | Your personal LLM trained on anything",
+              "AnythingLLM | Your personal LLM trained on anything"
+          ),
         },
       ];
     }
