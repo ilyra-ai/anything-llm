@@ -1,7 +1,17 @@
 const path = require('path');
 const assert = require('assert');
-const { SystemSettings } = require('../models/systemSettings');
 const { escapeHtml } = require('../utils/helpers/escapeHtml');
+
+// stub prisma before requiring SystemSettings
+const prismaPath = path.join(__dirname, '../utils/prisma/index.js');
+require.cache[require.resolve(prismaPath)] = {
+  id: prismaPath,
+  filename: prismaPath,
+  loaded: true,
+  exports: {},
+};
+
+const { SystemSettings } = require('../models/systemSettings');
 
 const malicious = '<script>alert("x")</script>';
 const sanitized = SystemSettings.validations.meta_page_title(malicious);
