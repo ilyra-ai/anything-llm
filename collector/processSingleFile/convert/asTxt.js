@@ -26,13 +26,33 @@ async function asTxt({ fullFilePath = "", filename = "" }) {
     };
   }
 
+  let docAuthor = "Unknown";
+  let description = "Unknown";
+  const fm = content.match(/^---\n([\s\S]*?)\n---\n?/);
+  if (fm) {
+    try {
+      const lines = fm[1].split(/\n/);
+      for (const line of lines) {
+        const [key, ...rest] = line.split(":");
+        if (!key || rest.length === 0) continue;
+        const value = rest.join(":").trim();
+        if (key.trim() === "author" && value) docAuthor = value;
+        if (["description", "summary"].includes(key.trim()) && value)
+          description = value;
+      }
+      content = content.slice(fm[0].length);
+    } catch (e) {
+      console.warn("Failed to parse front matter", e.message);
+    }
+  }
+
   console.log(`-- Working ${filename} --`);
   const data = {
     id: v4(),
     url: "file://" + fullFilePath,
     title: filename,
-    docAuthor: "Unknown", // TODO: Find a better author
-    description: "Unknown", // TODO: Find a better description
+    docAuthor,
+    description,
     docSource: "a text file uploaded by the user.",
     chunkSource: "",
     published: createdDate(fullFilePath),

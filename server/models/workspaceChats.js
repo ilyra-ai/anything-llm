@@ -299,11 +299,18 @@ const WorkspaceChats = {
   },
   bulkCreate: async function (chatsData) {
     try {
+
       const result = await prisma.workspace_chats.createMany({ data: chatsData });
       return { chats: result, message: null };
+
+      const { count } = await prisma.workspace_chats.createMany({
+        data: chatsData,
+      });
+      return { count, message: null };
+
     } catch (error) {
       console.error(error.message);
-      return { chats: null, message: error.message };
+      return { count: null, message: error.message };
     }
   },
 };
