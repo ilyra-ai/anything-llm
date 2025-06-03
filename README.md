@@ -177,6 +177,11 @@ Mintplex Labs & the community maintain a number of deployment methods, scripts, 
 
 [Learn about vector caching](./server/storage/vector-cache/VECTOR_CACHE.md)
 
+### Plans
+
+Run `npx prisma migrate dev` after changing the database schema.
+Admins can manage available plans at `/settings/plans`. Users can upgrade or downgrade their plan from the same page.
+
 ## External Apps & Integrations
 
 _These are apps that are not maintained by Mintplex Labs, but are compatible with AnythingLLM. A listing here is not an endorsement._

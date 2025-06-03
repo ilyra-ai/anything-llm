@@ -79,6 +79,7 @@ const TRANSLATIONS = {
     invites: "Invites",
     users: "Users",
     workspaces: "Workspaces",
+    plans: "Plans",
     "workspace-chats": "Workspace Chats",
     customization: "Customization",
     interface: "UI Preferences",

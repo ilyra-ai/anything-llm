@@ -147,6 +147,9 @@ export default {
     privacy: () => {
       return "/settings/privacy";
     },
+    plans: () => {
+      return "/settings/plans";
+    },
     embedSetup: () => {
       return `/settings/embed-config`;
     },
