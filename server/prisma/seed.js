@@ -19,6 +19,11 @@ async function main() {
       });
     }
   }
+
+  const planExists = await prisma.plans.findFirst({ where: { name: "Free" } });
+  if (!planExists) {
+    await prisma.plans.create({ data: { name: "Free", price: 0 } });
+  }
 }
 
 main()

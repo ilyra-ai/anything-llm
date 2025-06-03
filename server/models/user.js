@@ -110,6 +110,17 @@ const User = {
             this.validations.dailyMessageLimit(dailyMessageLimit),
         },
       });
+      try {
+        const { Plan } = require("./plan");
+        const { UserPlan } = require("./userPlan");
+        let plan = await Plan.get({ name: "Free" });
+        if (!plan) {
+          ({ plan } = await Plan.create({ name: "Free" }));
+        }
+        if (plan) await UserPlan.assign(user.id, plan.id);
+      } catch (e) {
+        console.error(e.message);
+      }
       return { user: this.filterFields(user), error: null };
     } catch (error) {
       console.error("FAILED TO CREATE USER.", error.message);
