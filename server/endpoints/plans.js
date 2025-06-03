@@ -1,8 +1,7 @@
 const { Plan } = require("../models/plan");
 const { UserPlan } = require("../models/userPlan");
 const { reqBody, userFromSession } = require("../utils/http");
-const { validatedRequest } = require("../utils/middleware/validatedRequest");
-const { strictMultiUserRoleValid, ROLES } = require("../utils/middleware/multiUserProtected");
+const { auth, requireRole } = require("../middleware/auth");
 
 function planEndpoints(app) {
   if (!app) return;
@@ -19,7 +18,7 @@ function planEndpoints(app) {
 
   app.post(
     "/plans",
-    [validatedRequest, strictMultiUserRoleValid([ROLES.admin])],
+    [auth, requireRole("admin")],
     async (req, res) => {
       try {
         const inputs = reqBody(req);
@@ -38,7 +37,7 @@ function planEndpoints(app) {
 
   app.put(
     "/plans/:id",
-    [validatedRequest, strictMultiUserRoleValid([ROLES.admin])],
+    [auth, requireRole("admin")],
     async (req, res) => {
       try {
         const { id } = req.params;
@@ -58,7 +57,7 @@ function planEndpoints(app) {
 
   app.delete(
     "/plans/:id",
-    [validatedRequest, strictMultiUserRoleValid([ROLES.admin])],
+    [auth, requireRole("admin")],
     async (req, res) => {
       try {
         const { id } = req.params;
@@ -71,7 +70,7 @@ function planEndpoints(app) {
     }
   );
 
-  app.post("/plans/change/:id", [validatedRequest], async (req, res) => {
+  app.post("/plans/change/:id", [auth], async (req, res) => {
     try {
       const { id } = req.params;
       const user = await userFromSession(req, res);

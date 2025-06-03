@@ -35,6 +35,7 @@ const { WorkspaceThread } = require("../models/workspaceThread");
 const truncate = require("truncate");
 const { purgeDocument } = require("../utils/files/purgeDocument");
 const { getModelTag } = require("./utils");
+const { auth } = require("../middleware/auth");
 
 function workspaceEndpoints(app) {
   if (!app) return;
@@ -113,6 +114,7 @@ function workspaceEndpoints(app) {
   app.post(
     "/workspace/:slug/upload",
     [
+      auth,
       validatedRequest,
       flexUserRoleValid([ROLES.admin, ROLES.manager]),
       handleFileUpload,
@@ -162,7 +164,7 @@ function workspaceEndpoints(app) {
 
   app.post(
     "/workspace/:slug/upload-link",
-    [validatedRequest, flexUserRoleValid([ROLES.admin, ROLES.manager])],
+    [auth, validatedRequest, flexUserRoleValid([ROLES.admin, ROLES.manager])],
     async (request, response) => {
       try {
         const Collector = new CollectorApi();
@@ -370,7 +372,7 @@ function workspaceEndpoints(app) {
 
   app.get(
     "/workspace/:slug/chats",
-    [validatedRequest, flexUserRoleValid([ROLES.all])],
+    [auth, validatedRequest, flexUserRoleValid([ROLES.all])],
     async (request, response) => {
       try {
         const { slug } = request.params;
