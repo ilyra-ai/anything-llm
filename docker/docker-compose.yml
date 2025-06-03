@@ -25,6 +25,7 @@ services:
       - "3001:3001"
     env_file:
       - .env
+    restart: unless-stopped
     networks:
       - anything-llm
     extra_hosts:
