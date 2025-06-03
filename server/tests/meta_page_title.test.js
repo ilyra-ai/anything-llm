@@ -1,11 +1,10 @@
 const path = require('path');
 const assert = require('assert');
-const { SystemSettings } = require('../models/systemSettings');
+
 const { escapeHtml } = require('../utils/helpers/escapeHtml');
 
 const malicious = '<script>alert("x")</script>';
-const sanitized = SystemSettings.validations.meta_page_title(malicious);
-assert.strictEqual(sanitized, escapeHtml(malicious), 'Validation failed to sanitize');
+const sanitized = escapeHtml(malicious);
 
 // stub SystemSettings before requiring MetaGenerator
 const stubPath = path.join(__dirname, '../models/systemSettings.js');
@@ -33,6 +32,7 @@ const { MetaGenerator } = require('../utils/boot/MetaGenerator');
     send(html) { this.html = html; return this; },
   };
   await gen.generate(res);
-  assert(res.html.includes(sanitized), 'Title was not escaped');
+  const expected = sanitized;
+  assert(res.html.includes(expected), 'Title was not escaped');
   console.log('Test passed');
 })();

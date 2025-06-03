@@ -163,7 +163,9 @@ const SystemSettings = {
     meta_page_title: (newTitle) => {
       try {
         if (typeof newTitle !== "string" || !newTitle) return null;
-        return escapeHtml(String(newTitle));
+        // escape characters like <, >, & to prevent HTML injection
+        const sanitized = escapeHtml(String(newTitle));
+        return sanitized;
       } catch {
         return null;
       } finally {
